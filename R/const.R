@@ -373,7 +373,6 @@ plot_validataion_wrap <- function(data, cohort) {
     dplyr::mutate(
       data,
       count_lead = max_pip == max_pip_nonsyn,
-      # count_lead = max_pip_nonsyn > 0.01 & max_pip != max_pip_nonsyn,
       count_cs = cs_nonsyn,
       count_cs_99 = cs_99_nonsyn
     ) %>%
