@@ -319,6 +319,10 @@ plot_multi_locuszoom_with_gbmi <- function(df.gbmi,
     dplyr::arrange(abs(position - position[which(.$variant == lead_variant_b37)[1]])) %$%
     locusviz::get_cs_color_mapping(.$csm_id, highlight_cs_ids = .$csm_id[which(.$variant == lead_variant_b37)])
 
+  if (trait == "Asthma" & lead_variant_b37 == "1:152285861:G:A") {
+    names(cs.colors) = rev(names(cs.colors))
+  }
+
   print(cs.colors)
   print(table(df.gbmi$cs))
 

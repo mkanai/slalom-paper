@@ -207,12 +207,13 @@ df.frac <-
   )
 
 
-munge_metrics <- function(df) {
+munge_metrics <- function(df, nlog10p_dentist_lower_bound = 4) {
   dplyr::group_by(df, pheno, config, region) %>%
     dplyr::summarize(
       abf_success = factor(any(abf_success), levels = c("FALSE", "TRUE")),
       abf_success_cs = factor(any(abf_success_cs), levels = c("FALSE", "TRUE")),
       abf_success_cs_99 = factor(any(abf_success_cs_99), levels = c("FALSE", "TRUE")),
+      max_prob_bin = max_prob_bin[1],
       max_nlog10p_dentist = max(max_nlog10p_dentist, na.rm = T),
       count = as.numeric(sum((nlog10p_dentist_bin >= nlog10p_dentist_lower_bound) * n)),
       count_total = as.numeric(sum(n)),
@@ -221,6 +222,7 @@ munge_metrics <- function(df) {
     dplyr::ungroup()
 }
 
+
 df.train <- df.frac
 
 df.train.best <-
@@ -228,6 +230,15 @@ df.train.best <-
     max_prob_bin >= 0.9) %>%
   munge_metrics()
 
+df.train.prediction <- dplyr::mutate(
+  dplyr::filter(df.train, r2_bin >= r2_threshold) %>%
+    munge_metrics(),
+  prediction = factor(
+    count >= count_threshold,
+    levels = c(TRUE, FALSE),
+    labels = c("Suspicious loci", "Non-suspicious loci")
+  )
+)
 
 df.prob001 <-
   dplyr::bind_rows(
@@ -238,18 +249,7 @@ df.prob001 <-
       "gs://meta-finemapping-simulation/new_simulations/sim_grch38.ALL.prob001.tsv.bgz"
     ),
   ) %>%
-  dplyr::left_join(
-    dplyr::mutate(
-      dplyr::filter(df.train, r2_bin >= r2_threshold) %>%
-        munge_metrics(),
-      prediction = factor(
-        count >= count_threshold,
-        levels = c(TRUE, FALSE),
-        labels = c("Suspicious loci", "Non-suspicious loci")
-      )
-    ) %>%
-      dplyr::select(pheno, config, region, prediction)
-  ) %>%
+  dplyr::left_join(dplyr::select(df.train.prediction, pheno, config, region, prediction)) %>%
   dplyr::mutate(prob_bin = cut(prob, pip_bin_breaks))
 
 df.prob001.threshold <-

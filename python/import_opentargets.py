@@ -5,6 +5,7 @@ from fm_insights.utils import register_log
 
 bucket = "finucane-opentargets-genetics"
 
+# gsutil -u encode-uk-biobank-restrict -m rsync -rd gs://open-targets-genetics-releases/22.02.01/variant-index gs://finucane-opentargets-genetics/releases/22.02.01/variant-index
 
 def main(args):
     if args.import_spark:

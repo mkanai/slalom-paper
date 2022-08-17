@@ -101,21 +101,24 @@ p1[[1]] <- p1[[1]] +
     vjust = -1
   ) +
   labs(tag = "d")
+p1[[2]] <- p1[[2]] + theme(legend.position = "none")
 p1[[3]] <- p1[[3]] + guides(color = guide_legend(ncol = 3))
 p2 <- p2 +
   geom_text(
     aes(
       x = data$r2[c(lead_idx1, lead_idx2)],
       y = data$chisq[c(lead_idx1, lead_idx2)],
-      label = c(lead_rsid1, lead_rsid2)
+      label = c(lead_rsid1, lead_rsid2),
+      vjust = c(-1, 2)
     ),
     data = tibble::tibble(),
-    size = 2,
-    vjust = -1
+    size = 2
   ) +
   labs(tag = "e") +
   coord_cartesian(clip = "off") +
-  theme(plot.title = element_text(hjust = 0.05))
+  theme(plot.title = element_text(hjust = 0.05),
+        legend.position = c(0, 0.9),
+        legend.justification = c(0, 1))
 
 ##############################
 my_pal <- function(range = c(1, 6)) {
