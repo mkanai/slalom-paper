@@ -248,7 +248,7 @@ plot_locuszoom_slalom <- function(data,
 }
 
 ##############################################################################
-# Fig. 4, 6, SFig. 6
+# Fig. 4, 6, SFig. 10
 ##############################################################################
 plot_validation_fraction <- function(data,
                                      title,
@@ -408,7 +408,7 @@ plot_validataion_wrap <- function(data, cohort) {
 }
 
 ##############################################################################
-# SFig. 5,7
+# SFig. 5,11
 ##############################################################################
 plot_sample_size_ratio_distribution <- function(data,
                                                 fill,

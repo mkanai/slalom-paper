@@ -104,18 +104,23 @@ gbmi_description <- c(
   "VTE" = "Venous thromboembolism"
 )
 
+r1_dropped_loci <- rgsutil::read_gsfile("gs://meta-finemapping-simulation/gbmi-all-biobank-meta/gbmi_r1_dropped_loci.txt", header = F) %>%
+  dplyr::rename(trait = V1, lead_pip_variant = V2)
+
 df.n_loci <- rgsutil::read_gsfile(
   "gs://meta-finemapping-simulation/gbmi-all-biobank-meta/gbmi-all-biobank-meta.SLALOM.summary.bgz"
 ) %>%
-  dplyr::mutate(Endpoint = stringr::str_split_fixed(trait, "_", 2)[, 1]) %>%
-  dplyr::group_by(Endpoint) %>%
+  dplyr::mutate(trait = stringr::str_split_fixed(trait, "_", 2)[, 1]) %>%
+  dplyr::anti_join(r1_dropped_loci) %>%
+  dplyr::group_by(trait) %>%
   dplyr::summarize(n_loci = n())
 
 df.n_samples <- read.table(
   "./metadata/gbmi_sample_size_by_ancestry.txt",
   T,
   sep = "\t"
-)
+) %>%
+  dplyr::rename(trait = Endpoint)
 
 dplyr::mutate(
   df.n_samples,
@@ -125,11 +130,11 @@ dplyr::mutate(
     TRUE ~ stringr::str_to_upper(Ancestry)
   )
 ) %>%
-  dplyr::group_by(Endpoint) %>%
+  dplyr::group_by(trait) %>%
   dplyr::mutate(biobanks = stringr::str_c(sort(unique(Biobank[Ancestry != "Total"])), collapse = ",")) %>%
-  dplyr::group_by(Endpoint, Ancestry) %>%
+  dplyr::group_by(trait, Ancestry) %>%
   dplyr::summarize(
-    description = gbmi_description[Endpoint][1],
+    description = gbmi_description[trait][1],
     biobanks = biobanks[1],
     n_cases = sum(Case),
     n_controls = sum(Control),
@@ -137,19 +142,19 @@ dplyr::mutate(
   ) %>%
   dplyr::left_join(df.n_loci) %>%
   tidyr::pivot_wider(
-    id_cols = c("Endpoint", "description", "n_loci", "biobanks"),
+    id_cols = c("trait", "description", "n_loci", "biobanks"),
     names_from = "Ancestry",
     values_from = c("n_cases", "n_controls")
   ) %>%
   dplyr::select(
-    Endpoint:biobanks,
+    trait:biobanks,
     dplyr::ends_with("Total"),
     dplyr::ends_with("AFR"),
     dplyr::ends_with("AMR"),
     dplyr::ends_with("EAS"),
     dplyr::ends_with("FIN"),
-    dplyr::ends_with("NFE"),
     dplyr::ends_with("MID"),
+    dplyr::ends_with("NFE"),
     dplyr::ends_with("SAS")
   ) %>%
   write.table(
@@ -165,6 +170,9 @@ dplyr::mutate(
 rgsutil::read_gsfile(
   "gs://meta-finemapping-simulation/gbmi-all-biobank-meta/gbmi-all-biobank-meta.SLALOM.summary.bgz"
 ) %>%
+  dplyr::mutate(trait_short = stringr::str_split_fixed(trait, "_", 2)[, 1]) %>%
+  dplyr::anti_join(r1_dropped_loci, by = c("trait_short" = "trait", "lead_pip_variant")) %>%
+  dplyr::select(-trait_short) %>%
   munge_slalom_prediction() %>%
   write.table(
     "./tables/STable8_gbmi_slalom.tsv",

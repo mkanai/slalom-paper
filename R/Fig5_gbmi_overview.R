@@ -67,6 +67,9 @@ rgsutil::write_gsfile(
 )
 
 ###################################################################
+r1_dropped_loci <- rgsutil::read_gsfile("gs://meta-finemapping-simulation/gbmi-all-biobank-meta/gbmi_r1_dropped_loci.txt", header = FALSE) %>%
+  dplyr::rename(trait = V1, lead_pip_variant = V2)
+
 data <- rgsutil::read_gsfile(
   "gs://meta-finemapping-simulation/gbmi-all-biobank-meta/gbmi-all-biobank-meta.SLALOM.summary.bgz"
 ) %>%
@@ -91,7 +94,8 @@ data <- rgsutil::read_gsfile(
       levels = c("SL", "NSL", "NA")
     ),
     trait = stringr::str_split_fixed(trait, "_", 2)[, 1],
-  )
+  ) %>%
+  dplyr::anti_join(r1_dropped_loci)
 
 ncol <- 8
 max_pip_colors <- c("grey80", BuenColors::jdb_palette("Zissou")[3:5])
@@ -139,7 +143,11 @@ plt <-
       labs(title = trait, y = "# loci", fill = "Max PIP bin") +
       scale_x_discrete(drop = FALSE) +
       scale_y_continuous(
-        breaks = scales::pretty_breaks(),
+        breaks = if (trait == "HCM") {
+          c(0, 1, 2)
+        } else {
+          scales::pretty_breaks()
+        },
         expand = expansion(mult = c(0, 0.2))
       ) +
       theme(plot.title = element_text(

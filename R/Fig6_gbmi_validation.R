@@ -3,17 +3,25 @@ library(dplyr)
 library(magrittr)
 source("~/src/github.com/mkanai/slalom-paper/R/const.R")
 
+r1_dropped_loci <- rgsutil::read_gsfile("gs://meta-finemapping-simulation/gbmi-all-biobank-meta/gbmi_r1_dropped_loci.txt", header = FALSE) %>%
+  dplyr::rename(trait_short = V1, lead_pip_variant = V2)
+
 df.gbmi <- rgsutil::read_gsfile(
   "gs://meta-finemapping-simulation/gbmi-all-biobank-meta/gbmi-all-biobank-meta.SLALOM.summary.bgz"
 ) %>%
-  dplyr::mutate(prediction = factor(
-    dplyr::case_when(
-      max_pip < 0.1 ~ "NA",
-      n_dentist_outlier > 0 ~ "SL",
-      TRUE ~ "NSL"
+  dplyr::mutate(
+    prediction = factor(
+      dplyr::case_when(
+        max_pip < 0.1 ~ "NA",
+        n_dentist_outlier > 0 ~ "SL",
+        TRUE ~ "NSL"
+      ),
+      levels = c("SL", "NSL", "NA")
     ),
-    levels = c("SL", "NSL", "NA")
-  ))
+    trait_short = stringr::str_split_fixed(trait, "_", 2)[, 1]
+  ) %>%
+  dplyr::anti_join(r1_dropped_loci) %>%
+  dplyr::select(-trait_short)
 
 plts_validation <- plot_validataion_wrap(df.gbmi, "GBMI")
 plts_validation <- purrr::imap(plts_validation, function(x, i) {
@@ -116,9 +124,11 @@ p2 <- p2 +
   ) +
   labs(tag = "e") +
   coord_cartesian(clip = "off") +
-  theme(plot.title = element_text(hjust = 0.05),
-        legend.position = c(0, 0.9),
-        legend.justification = c(0, 1))
+  theme(
+    plot.title = element_text(hjust = 0.05),
+    legend.position = c(0, 0.9),
+    legend.justification = c(0, 1)
+  )
 
 ##############################
 my_pal <- function(range = c(1, 6)) {

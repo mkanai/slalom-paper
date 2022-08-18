@@ -19,17 +19,25 @@ df.pip <- rgsutil::read_gsfile("gs://meta-finemapping-simulation/bbj_fg_ukbb.sha
     TRUE ~ trait
   ))
 
+r1_dropped_loci <- rgsutil::read_gsfile("gs://meta-finemapping-simulation/gbmi-all-biobank-meta/gbmi_r1_dropped_loci.txt", header = FALSE) %>%
+  dplyr::rename(trait_short = V1, lead_pip_variant = V2)
+
 df.gbmi <- rgsutil::read_gsfile(
   "gs://meta-finemapping-simulation/gbmi-all-biobank-meta/gbmi-all-biobank-meta.SLALOM.summary.bgz"
 ) %>%
-  dplyr::mutate(prediction = factor(
-    dplyr::case_when(
-      max_pip < 0.1 ~ "NA",
-      n_dentist_outlier > 0 ~ "SL",
-      TRUE ~ "NSL"
+  dplyr::mutate(
+    prediction = factor(
+      dplyr::case_when(
+        max_pip < 0.1 ~ "NA",
+        n_dentist_outlier > 0 ~ "SL",
+        TRUE ~ "NSL"
+      ),
+      levels = c("SL", "NSL", "NA")
     ),
-    levels = c("SL", "NSL", "NA")
-  ))
+    trait_short = stringr::str_split_fixed(trait, "_", 2)[, 1]
+  ) %>%
+  dplyr::anti_join(r1_dropped_loci) %>%
+  dplyr::select(-trait_short)
 
 shared_traits <- c(
   "Asthma_Bothsex_inv_var_meta_GBMI_052021",
@@ -320,7 +328,7 @@ plot_multi_locuszoom_with_gbmi <- function(df.gbmi,
     locusviz::get_cs_color_mapping(.$csm_id, highlight_cs_ids = .$csm_id[which(.$variant == lead_variant_b37)])
 
   if (trait == "Asthma" & lead_variant_b37 == "1:152285861:G:A") {
-    names(cs.colors) = rev(names(cs.colors))
+    names(cs.colors) <- rev(names(cs.colors))
   }
 
   print(cs.colors)
