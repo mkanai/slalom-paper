@@ -84,7 +84,7 @@ plt <-
   patchwork::plot_annotation(tag_levels = "a")
 
 cowplot::save_plot(
-  "figures/SFig13_pip_delta.pdf",
+  "figures/SFig14_pip_delta.pdf",
   plt,
   base_height = 7.2,
   base_width = 7.2,

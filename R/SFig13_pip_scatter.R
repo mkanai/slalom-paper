@@ -66,7 +66,7 @@ plt <-
   patchwork::plot_layout(ncol = 4)
 
 cowplot::save_plot(
-  "figures/SFig12_pip_scatter.pdf",
+  "figures/SFig13_pip_scatter.pdf",
   plt,
   base_height = 9,
   base_width = 7.2,

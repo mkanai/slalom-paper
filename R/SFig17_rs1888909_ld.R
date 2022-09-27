@@ -95,7 +95,7 @@ plt <-
   labs(x = "Chromosome 9")
 
 cowplot::save_plot(
-  "figures/SFig16_rs1888909_ld.pdf",
+  "figures/SFig17_rs1888909_ld.pdf",
   plt,
   base_height = 3.6,
   base_width = 7.2,

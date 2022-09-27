@@ -35,7 +35,7 @@ plt <-
   magrittr::extract2(1)
 
 cowplot::save_plot(
-  "figures/SFig10_gwas_catalog_validation_nonsyn08.pdf",
+  "figures/SFig11_gwas_catalog_validation_nonsyn08.pdf",
   plt,
   base_height = 2.5,
   base_width = 2.5,

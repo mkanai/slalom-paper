@@ -203,7 +203,7 @@ plts <- purrr::pmap(tibble::tibble(
     stringr::str_replace(rsq_str, "^0", "0.")
   )
   plts[[1]] <- plts[[1]] + labs(
-    tag = letters[i],
+    tag = letters[2 - i %% 2],
     title = title
   ) +
     theme(plot.title = element_text(margin = margin(t = -7), hjust = -0.013 * stringr::str_length(title)))
@@ -223,14 +223,14 @@ p2 <-
   patchwork::plot_layout(ncol = 1, heights = rep(c(1, 2), 2))
 
 cowplot::save_plot(
-  "figures/SFig3_ab_imputation_upset.pdf",
+  "figures/SFig3_imputation_upset.pdf",
   p1,
   base_height = 8,
   base_width = 7.2,
   device = cairo_pdf
 )
 cowplot::save_plot(
-  "figures/SFig3_cd_imputation_upset.pdf",
+  "figures/SFig4_imputation_upset.pdf",
   p2,
   base_height = 8,
   base_width = 7.2,

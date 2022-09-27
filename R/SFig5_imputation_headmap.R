@@ -78,7 +78,7 @@ plt <-
 plt
 
 cowplot::save_plot(
-  "figures/SFig4_shared_heatmap.pdf",
+  "figures/SFig5_shared_heatmap.pdf",
   plt,
   base_height = 4.2,
   base_width = 7.2,

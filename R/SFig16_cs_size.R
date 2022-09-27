@@ -79,7 +79,7 @@ plt <-
   patchwork::plot_annotation(tag_levels = "a")
 
 cowplot::save_plot(
-  "figures/SFig15_cs_size.pdf",
+  "figures/SFig16_cs_size.pdf",
   plt,
   base_height = 3.2,
   base_width = 7.2,

@@ -71,7 +71,7 @@ plt <- purrr::map(c("abf_success", "abf_success_cs", "abf_success_cs_99"), funct
   patchwork::plot_annotation(tag_levels = "a")
 
 cowplot::save_plot(
-  "figures/SFig9_grid_auc.pdf",
+  "figures/SFig10_grid_auc.pdf",
   plt,
   base_height = 3.6,
   base_width = 7.2,

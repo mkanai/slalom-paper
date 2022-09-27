@@ -53,7 +53,7 @@ plt <-
 plt
 
 cowplot::save_plot(
-  "figures/SFig11_gbmi_sample_size_ratio.pdf",
+  "figures/SFig12_gbmi_sample_size_ratio.pdf",
   plt,
   base_height = 3.6,
   base_width = 7.2,

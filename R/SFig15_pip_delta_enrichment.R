@@ -118,7 +118,7 @@ plt <- purrr::imap(c(0.01, 0.05, 0.1), function(threshold, i) {
   patchwork::plot_annotation(tag_levels = "a")
 
 cowplot::save_plot(
-  "figures/SFig14_pip_delta_enrichment.pdf",
+  "figures/SFig15_pip_delta_enrichment.pdf",
   plt,
   base_height = 2.4,
   base_width = 7.2,

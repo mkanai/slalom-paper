@@ -32,7 +32,7 @@ plt <- plot_sample_size_ratio_distribution(df.ratio, fill = BuenColors::jdb_pale
 plt
 
 cowplot::save_plot(
-  "figures/SFig5_simulation_sample_size_ratio.pdf",
+  "figures/SFig6_simulation_sample_size_ratio.pdf",
   plt,
   base_height = 3.6,
   base_width = 3.6,
