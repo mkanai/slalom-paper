@@ -8,9 +8,9 @@ The GBMI summary statistics for the 14 endpoints are available [here](https://ww
 
 ## Citation
 
-- Kanai, M. et al. [Meta-analysis fine-mapping is often miscalibrated at single-variant resolution](http://dx.doi.org/10.1101/2022.03.16.22272457). medRxiv (2022) doi:10.1101/2022.03.16.22272457
+- Kanai, M. et al. [Meta-analysis fine-mapping is often miscalibrated at single-variant resolution](http://dx.doi.org/10.1016/j.xgen.2022.100210). Cell Genomics 2, 100210 (2022)
 
-- The GBMI flagship paper: Zhou, W. et al. [Global Biobank Meta-analysis Initiative: powering genetic discovery across human diseases](http://dx.doi.org/10.1101/2021.11.19.21266436). medRxiv (2021) doi:10.1101/2021.11.19.21266436
+- The GBMI flagship paper: Zhou, W. et al. [Global Biobank Meta-analysis Initiative: Powering genetic discovery across human disease](http://dx.doi.org/10.1016/j.xgen.2022.100192). Cell Genomics 2, 100192 (2022)
 
 - The other accompanying papers are available [here](https://www.globalbiobankmeta.org/general-4).
 
